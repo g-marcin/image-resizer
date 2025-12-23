@@ -1,4 +1,4 @@
-.PHONY: install dev venv run clean
+.PHONY: install dev venv run clean pm2-start pm2-stop pm2-restart pm2-logs pm2-status
 
 ifeq ($(OS),Windows_NT)
     PYTHON := python
@@ -28,5 +28,28 @@ run: install
 
 clean:
 	$(RM) venv 2>nul || true
+
+pm2-start: install
+ifeq ($(OS),Windows_NT)
+	@echo "PM2 on Windows requires manual setup"
+else
+	chmod +x start.sh
+	pm2 start ecosystem.config.js
+endif
+
+pm2-stop:
+	pm2 stop image-resizer
+
+pm2-restart:
+	pm2 restart image-resizer
+
+pm2-logs:
+	pm2 logs image-resizer
+
+pm2-status:
+	pm2 status
+
+pm2-delete:
+	pm2 delete image-resizer
 
 
