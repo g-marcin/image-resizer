@@ -30,12 +30,7 @@ clean:
 	$(RM) venv 2>nul || true
 
 pm2-start: install
-ifeq ($(OS),Windows_NT)
-	@echo "PM2 on Windows requires manual setup"
-else
-	chmod +x start.sh
 	pm2 start ecosystem.config.js
-endif
 
 pm2-stop:
 	pm2 stop image-resizer
