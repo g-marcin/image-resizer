@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from prometheus_fastapi_instrumentator import Instrumentator
 from app.routes import images
+from app.telemetry import setup_telemetry
 import app.config as config
 
 app = FastAPI(
@@ -18,6 +19,7 @@ app.add_middleware(
 )
 
 Instrumentator().instrument(app).expose(app)
+setup_telemetry(app)
 
 app.include_router(images.router)
 
