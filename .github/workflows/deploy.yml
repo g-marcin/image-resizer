@@ -1,0 +1,25 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT }}
+          script: |
+            set -e
+            export PATH="$HOME/.local/bin:$PATH"
+            cd ${{ vars.VPS_DEPLOY_PATH }}
+            git fetch origin main
+            git reset --hard origin/main
+            uv pip install --python venv/bin/python -r requirements.txt
+            pm2 restart image-resizer
